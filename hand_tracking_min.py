@@ -1,4 +1,4 @@
-
+import subprocess
 import webbrowser
 import cv2
 import mediapipe as mp
@@ -27,9 +27,9 @@ hand = {
 
 
 def open_server():
-    os.system('python -m http.server 8000')
-
-
+    subprocess.run(['python', '-m', 'http.server', '8000'], cwd=os.getcwd(), check=True)
+    open('index.html', 'w').close()
+    
 def change_pic(addr):
     f = open('index.html', 'w')
     f.close()
