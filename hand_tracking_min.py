@@ -27,11 +27,9 @@ hand = {
 
 previous_img_url = None
 
-
 def open_server():
     subprocess.run(['python', '-m', 'http.server', '8000'], cwd=os.getcwd(), check=True)
     open('index.html', 'w').close()
-
 
 def change_pic(addr):
     global previous_img_url
@@ -47,7 +45,6 @@ def change_pic(addr):
             f.write('<meta http-equiv="refresh" content="1">')
 
         previous_img_url = addr
-
 
 server = Thread(target=open_server)
 server.start()
