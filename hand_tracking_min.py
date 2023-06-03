@@ -25,21 +25,28 @@ hand = {
     'finger_y': 1000000,
 }
 
+previous_img_url = None
+
 
 def open_server():
     subprocess.run(['python', '-m', 'http.server', '8000'], cwd=os.getcwd(), check=True)
     open('index.html', 'w').close()
-    
-def change_pic(addr):
-    f = open('index.html', 'w')
-    f.close()
 
-    with open('index.html', 'w') as f:
-        f.write(
-            '<style> img {width: auto; max-height: 100%;}\nh1{color:blue; font-size: x-large} </style>\n')
-        f.write('<h1> Current state </h1>\n')
-        f.write(f'<img src="{addr}" />\n')
-        f.write('<meta http-equiv="refresh" content="3">')
+
+def change_pic(addr):
+    global previous_img_url
+
+    if addr != previous_img_url:
+        f = open('index.html', 'w')
+        f.close()
+
+        with open('index.html', 'w') as f:
+            f.write('<style> img {width: auto; max-height: 100%;}\nh1{color:blue; font-size: x-large} </style>\n')
+            f.write('<h1> Current state </h1>\n')
+            f.write(f'<img src="{addr}" />\n')
+            f.write('<meta http-equiv="refresh" content="1">')
+
+        previous_img_url = addr
 
 
 server = Thread(target=open_server)
@@ -67,7 +74,8 @@ while True:
                     cv2.circle(img, (cx, cy), 10, (255, 0, 255), cv2.FILLED)
                     hand.update({'finger_x': cx, 'finger_y': cy})
 
-                if hand.get('thumb_x') - hand.get('finger_x') <= 10 and hand.get('thumb_y') - hand.get('finger_y') <= 40:
+                if hand.get('thumb_x') - hand.get('finger_x') <= 10 and hand.get('thumb_y') - hand.get(
+                        'finger_y') <= 40:
                     change_pic(
                         'https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcQkrjYxSfSHeCEA7hkPy8e2JphDsfFHZVKqx-3t37E4XKr-AT7DML8IwtwY0TnZsUcQ')
                 else:
